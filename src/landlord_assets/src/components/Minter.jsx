@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { opend } from "../../../declarations/opend";
+import { landlord } from "../../../declarations/landlord";
 import { Principal } from "@dfinity/principal";
 import Item from "./Item";
 
@@ -17,8 +17,9 @@ function Minter() {
     // const image = data.image[0];
     const imageArray = await image.arrayBuffer();
     const imageByteData = [...new Uint8Array(imageArray)];
+    console.log(imageByteData);
 
-    const newNFTID = await opend.mint(imageByteData, name);
+    const newNFTID = await landlord.mint(imageByteData, name);
     console.log(newNFTID.toText());
     setNFTPrincipal(newNFTID);
     setLoaderHidden(true);
@@ -49,13 +50,13 @@ function Minter() {
             />
           </div>
           <h6 className="form-Typography-root makeStyles-subhead-102 form-Typography-subtitle1 form-Typography-gutterBottom">
-            Collection Name
+            Details
           </h6>
           <div className="form-FormControl-root form-TextField-root form-FormControl-marginNormal form-FormControl-fullWidth">
             <div className="form-InputBase-root form-OutlinedInput-root form-InputBase-fullWidth form-InputBase-formControl">
               <input
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. CryptoDunks"
+                placeholder="e.g. bla bla bla"
                 type="text"
                 className="form-InputBase-input form-OutlinedInput-input"
               />

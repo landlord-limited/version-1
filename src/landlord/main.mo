@@ -1,12 +1,12 @@
 import Cycles "mo:base/ExperimentalCycles";
 import Debug "mo:base/Debug";
-import NFTActorClass "../NFT/nft";
+import NFTActorClass "../property/nft";
 import Principal "mo:base/Principal";
 import HashMap "mo:base/HashMap";
 import List "mo:base/List";
 import Iter "mo:base/Iter";
 
-actor OpenD {
+actor Landlord {
 
     private type Listing = {
         itemOwner: Principal;
@@ -77,7 +77,7 @@ actor OpenD {
     };
 
     public query func getOpenDCanisterId() : async Principal {
-        return Principal.fromActor(OpenD);
+        return Principal.fromActor(Landlord);
     };
 
     public query func isListed(id: Principal) : async Bool {

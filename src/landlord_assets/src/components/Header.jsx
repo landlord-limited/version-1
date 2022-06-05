@@ -4,7 +4,8 @@ import homeImage from "../../assets/home-img.png";
 import { BrowserRouter, Link, Switch, Route } from "react-router-dom";
 import Minter from "./Minter";
 import Gallery from "./Gallery";
-import { opend } from "../../../declarations/opend";
+import App from "./faucet/App";
+import { landlord } from "../../../declarations/landlord";
 import CURRENT_USER_ID from "../index";
 
 function Header() {
@@ -13,11 +14,11 @@ function Header() {
   const [listingGallery, setUserListingGallery] = useState();
 
   async function getNFTs() {
-    const userNFTIds = await opend.getOwnedNFTs(CURRENT_USER_ID);
+    const userNFTIds = await landlord.getOwnedNFTs(CURRENT_USER_ID);
     console.log(userNFTIds);
     setUserOwnedGallery(<Gallery title="My NFTs" ids={userNFTIds} role="collection" />);
 
-    const listedNFTIds = await opend.getListedNFTs();
+    const listedNFTIds = await landlord.getListedNFTs();
     console.log(listedNFTIds);
     setUserListingGallery(<Gallery title="Discover" ids={listedNFTIds} role="discover" />);
   }
@@ -35,13 +36,18 @@ function Header() {
           <img className="header-logo-11" src={logo} />
           <div className="header-vertical-9"></div>
           <Link to="/">
-          <h5 className="Typography-root header-logo-text">OpenD</h5>
+          <h5 className="Typography-root header-logo-text">Landlord</h5>
           </Link>
           <div className="header-empty-6"></div>
           <div className="header-space-8"></div>
           <button className="ButtonBase-root Button-root Button-text header-navButtons-3">
+            <Link to="/faucet">
+            Faucet
+            </Link>
+          </button>
+          <button className="ButtonBase-root Button-root Button-text header-navButtons-3">
             <Link to="/discover">
-            Discover
+            Dashboard
             </Link>
           </button>
           <button className="ButtonBase-root Button-root Button-text header-navButtons-3">
@@ -59,7 +65,10 @@ function Header() {
     </div>
     <Switch>
       <Route exact path="/">
-        <img className="bottom-space" src={homeImage} />
+        <h1>Landing Page</h1>
+      </Route>
+      <Route path="/faucet">
+        <App />
       </Route>
       <Route path="/discover">
         {listingGallery}

@@ -5,7 +5,7 @@ import { idlFactory } from "../../../declarations/nft";
 import { idlFactory as tokenIdlFactory } from "../../../declarations/token";
 import { Principal } from "@dfinity/principal";
 import Button from "./Button";
-import { opend } from "../../../declarations/opend"
+import { landlord } from "../../../declarations/landlord"
 import CURRENT_USER_ID from "../index";
 import PriceLabel from "./PriceLabel";
 
@@ -49,10 +49,10 @@ function Item(props) {
 
     if (props.role == "collection") {
 
-        const nftIsListed = await opend.isListed(props.id);
+        const nftIsListed = await landlord.isListed(props.id);
     
         if (nftIsListed) {
-          setOwner("OpenD");
+          setOwner("Landlord");
           setBlur({filter: "blur(4px)"});
           setSellStatus("Listed");
         } else {
@@ -60,12 +60,12 @@ function Item(props) {
         }
     
     } else if (props.role == "discover") {
-      const originalOwner = await opend.getOriginalOwner(props.id);
+      const originalOwner = await landlord.getOriginalOwner(props.id);
       if (originalOwner.toText() != CURRENT_USER_ID.toText()) {
         setButton(<Button handleClick={handleBuy} text={"Buy"} />);
       }
 
-      const price = await opend.getListedNFTPrice(props.id);
+      const price = await landlord.getListedNFTPrice(props.id);
       setPriceLable(<PriceLabel sellPrice={price.toString()} />)
     }
   } 
@@ -80,7 +80,7 @@ function Item(props) {
   function handleSell() {
     console.log("Sell clicked");
     setPriceInput(<input
-        placeholder="Price in DANG"
+        placeholder="Price in LND"
         type="number"
         className="price-input"
         value={price}
@@ -96,10 +96,10 @@ function Item(props) {
     console.log("set price = " + price);
     // const newId = Principal.fromText(props.id);
     // console.log("Principal: " + newId);
-    const listingResult = await opend.listItem(id, Number(price));
+    const listingResult = await landlord.listItem(id, Number(price));
     console.log("listing: " + listingResult);
     if (listingResult == "Success") {
-      const openDId = await opend.getOpenDCanisterId();
+      const openDId = await landlord.getOpenDCanisterId();
       const transferResult = await NFTActor.transferOwnership(openDId);
       console.log(transferResult);
       if (transferResult == "Success") {
@@ -117,16 +117,16 @@ function Item(props) {
     setLoaderHidden(false);
     const tokenActor = await Actor.createActor(tokenIdlFactory, {
       agent,
-      canisterId: Principal.fromText("renrk-eyaaa-aaaaa-aaada-cai"),
+      canisterId: Principal.fromText("rkp4c-7iaaa-aaaaa-aaaca-cai"),
     });
 
-    const sellerId = await opend.getOriginalOwner(props.id);
-    const itemPrice = await opend.getListedNFTPrice(props.id);
+    const sellerId = await landlord.getOriginalOwner(props.id);
+    const itemPrice = await landlord.getListedNFTPrice(props.id);
 
     const result = await tokenActor.transfer(sellerId, itemPrice);
     if (result == "Success") {
       //Transfer Ownership
-      const transferResult = await opend.completePurchase(props.id, sellerId, CURRENT_USER_ID);
+      const transferResult = await landlord.completePurchase(props.id, sellerId, CURRENT_USER_ID);
       console.log("purchase: " + transferResult);
       setLoaderHidden(true);
       setDisplay(false);

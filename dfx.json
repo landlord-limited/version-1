@@ -1,23 +1,27 @@
 {
   "canisters": {
-    "opend": {
-      "main": "src/opend/main.mo",
+    "landlord": {
+      "main": "src/landlord/main.mo",
       "type": "motoko"
     },
     "nft": {
-      "main": "src/NFT/nft.mo",
+      "main": "src/property/nft.mo",
       "type": "motoko"
     },
-    "opend_assets": {
+    "token": {
+      "main": "src/token/main.mo",
+      "type": "motoko"
+    },
+    "landlord_assets": {
       "dependencies": [
-        "opend"
+        "landlord"
       ],
       "frontend": {
-        "entrypoint": "src/opend_assets/src/index.html"
+        "entrypoint": "src/landlord_assets/src/index.html"
       },
       "source": [
-        "src/opend_assets/assets",
-        "dist/opend_assets/"
+        "src/landlord_assets/assets",
+        "dist/landlord_assets/"
       ],
       "type": "assets"
     }

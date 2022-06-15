@@ -6,7 +6,7 @@ import { idlFactory as tokenIdlFactory } from "../../../declarations/token";
 import { Principal } from "@dfinity/principal";
 import Button from "./Button";
 import { landlord } from "../../../declarations/landlord"
-import CURRENT_USER_ID from "../index";
+import { CURRENT_USER_ID } from "./Header";
 import PriceLabel from "./PriceLabel";
 
 function Item(props) {

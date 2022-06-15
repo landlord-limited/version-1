@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { AuthClient } from "@dfinity/auth-client";
 import logo from "../../assets/logo.png";
 import homeImage from "../../assets/home-img.png";
 import { BrowserRouter, Link, Switch, Route } from "react-router-dom";
@@ -6,12 +7,50 @@ import Minter from "./Minter";
 import Gallery from "./Gallery";
 import App from "./faucet/App";
 import { landlord } from "../../../declarations/landlord";
-import CURRENT_USER_ID from "../index";
+// import CURRENT_USER_ID from "../index";
+import dfinityLogo from "../../assets/dfinity.svg";
+
+const CURRENT_USER_ID = "";
 
 function Header() {
 
   const [userOwnedGallery, setUserOwnedGallery] = useState();
   const [listingGallery, setUserListingGallery] = useState();
+  const [signedIn, setSignedIn] = useState(false);
+  const [principal, setPrincipal] = useState("");
+  const [client, setClient] = useState();
+
+  const initAuth = async () => {
+    const client = await AuthClient.create()
+    const isAuthenticated = await client.isAuthenticated()
+
+    setClient(client)
+
+    if (isAuthenticated) {
+      const identity = client.getIdentity()
+      const principal = identity.getPrincipal().toString()
+      setSignedIn(true)
+      setPrincipal(principal)
+      CURRENT_USER_ID = principal;
+    }
+  }
+
+  const signIn = async () => {
+    const { identity, principal } = await new Promise((resolve, reject) => {
+      client.login({
+        identityProvider: "https://identity.ic0.app",
+        onSuccess: () => {
+          const identity = client.getIdentity()
+          const principal = identity.getPrincipal().toString()
+          resolve({ identity, principal })
+        },
+        onError: reject,
+      })
+    })
+    setSignedIn(true)
+    setPrincipal(principal)
+    CURRENT_USER_ID = principal;
+  }
 
   async function getNFTs() {
     const userNFTIds = await landlord.getOwnedNFTs(CURRENT_USER_ID);
@@ -25,6 +64,7 @@ function Header() {
 
   useEffect(() => {
     getNFTs();
+    initAuth();
   }, []);
 
   return (
@@ -68,7 +108,12 @@ function Header() {
         <h1>Landing Page</h1>
       </Route>
       <Route path="/faucet">
-        <App />
+        {!signedIn && client ? (
+        <button onClick={signIn} className="auth-button">
+          Get Started
+          <img style={{ width: "33px", marginRight: "-1em", marginLeft: "0.7em" }} src={dfinityLogo} />
+        </button>
+      ) : <App />}
       </Route>
       <Route path="/discover">
         {listingGallery}
@@ -84,4 +129,4 @@ function Header() {
   );
 }
 
-export default Header;
+export {Header, CURRENT_USER_ID};

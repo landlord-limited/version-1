@@ -2,3 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components{
+  .btn-primary  {
+    @apply bg-[#274FB6] text-white text-sm uppercase px-4 py-2 hover:bg-[#21459f] transition duration-150 ease-in-out
+  }
+  .ab {
+    filter: drop-shadow(0.35rem 0.35rem 0.4rem rgba(0, 0, 0, 0.5));
+  }
+  .nav {
+    @apply flex justify-between items-center text-[#274FB6] bg-white hover:text-white hover:bg-[#21459f] px-4 rounded transition ease-in-out duration-150 py-2 font-semibold
+  }
+}

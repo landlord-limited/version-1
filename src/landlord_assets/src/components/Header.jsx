@@ -3,6 +3,7 @@ import { AuthClient } from "@dfinity/auth-client";
 import logo from "../../assets/logo.png";
 import homeImage from "../../assets/home-img.png";
 import { BrowserRouter, Link, Switch, Route } from "react-router-dom";
+import Hero from '../components/landingPage/Hero'
 import Minter from "./Minter";
 import Gallery from "./Gallery";
 import App from "./faucet/App";
@@ -98,7 +99,7 @@ function Header() {
     </div>
     <Switch>
       <Route exact path="/">
-        <h1>Landing Page</h1>
+        <Hero />
       </Route>
       <Route path="/faucet">
         {!signedIn && client ? (

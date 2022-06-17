@@ -4,6 +4,8 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 function initCanisterEnv() {
   let localCanisters, prodCanisters;
   try {
@@ -78,12 +80,17 @@ module.exports = {
   module: {
     rules: [
       { test: /\.(ts|tsx|jsx)$/, loader: "ts-loader" },
-      { test: /\.css$/, use: ["style-loader", "css-loader"] },
+      { test: /\.s[ac]ss$/i, use: ["style-loader", "css-loader", "postcss-loader"] },
+      { test: /\.css$/i, use: ["style-loader", "css-loader", "postcss-loader"] },
       { test: /\.svg$/, use: ["svg-url-loader"] },
       { test: /\.(jpg|png|webp)$/, use: ["url-loader"] },
     ]
    },
   plugins: [
+    new MiniCssExtractPlugin({
+      filename: "styles.css",
+      chunkFilename: "styles.css"
+    }),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, asset_entry),
       cache: false,

@@ -44,10 +44,13 @@
     "last 2 edge version"
   ],
   "dependencies": {
+    "@babel/preset-env": "^7.18.2",
     "@dfinity/auth-client": "0.10.3",
     "@dfinity/authentication": "0.10.3",
     "@dfinity/identity": "0.10.3",
+    "@headlessui/react": "^1.6.4",
     "autoprefixer": "^10.4.7",
+    "babel-loader": "^8.2.5",
     "bootstrap": "^5.1.3",
     "lit-html": "^1.4.1",
     "mini-css-extract-plugin": "^2.6.1",

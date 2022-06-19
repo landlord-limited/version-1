@@ -17,12 +17,12 @@ actor Landlord {
     var mapOfOwners = HashMap.HashMap<Principal, List.List<Principal>>(1, Principal.equal, Principal.hash);
     var mapOfListings = HashMap.HashMap<Principal, Listing>(1, Principal.equal, Principal.hash);
 
-    public shared(msg) func mint(imgData: [Nat8], name: Text) : async Principal {
+    public shared(msg) func mint(imgData: [Nat8], description: Text, valuation: Text, propertyType: Text, llc: Text) : async Principal {
         let owner : Principal = msg.caller;
 
         Debug.print(debug_show(Cycles.balance()));
         Cycles.add(100_500_000_000);
-        let newNFT = await NFTActorClass.NFT(name, owner, imgData);
+        let newNFT = await NFTActorClass.NFT(description, owner, imgData, valuation, propertyType, llc);
         Debug.print(debug_show(Cycles.balance()));
 
         let  newNFTPrincipal = await newNFT.getCanisterId();
@@ -76,7 +76,7 @@ actor Landlord {
         }
     };
 
-    public query func getOpenDCanisterId() : async Principal {
+    public query func getLandlordCanisterId() : async Principal {
         return Principal.fromActor(Landlord);
     };
 

@@ -80,6 +80,11 @@ module.exports = {
   module: {
     rules: [
       { test: /\.(ts|tsx|jsx)$/, loader: "ts-loader" },
+      // { test: /\.js$/i, use: { loader: 'babel-loader',
+      //     options: {
+      //       presets: ['@babel/preset-env'],
+      //     },
+      //   }, },
       { test: /\.s[ac]ss$/i, use: ["style-loader", "css-loader", "postcss-loader"] },
       { test: /\.css$/i, use: ["style-loader", "css-loader", "postcss-loader"] },
       { test: /\.svg$/, use: ["svg-url-loader"] },

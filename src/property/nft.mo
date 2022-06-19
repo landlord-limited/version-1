@@ -1,13 +1,16 @@
 import Debug "mo:base/Debug";
 import Principal "mo:base/Principal";
 
-actor class NFT (name: Text, owner: Principal, content: [Nat8]) = this {
-    private let itemName = name;
+actor class NFT (description: Text, owner: Principal, content: [Nat8], valuation: Text, propertyType: Text, llc: Text) = this {
+    private let propertyDescription = description;
     private var nftOwner = owner;
     private let imageBytes = content;
+    private let value = valuation;
+    private let assetType = propertyType;
+    private let nameOfLLC = llc;
 
-    public query func getName() : async Text{
-        return itemName;
+    public query func getDescription() : async Text{
+        return propertyDescription;
     };
 
     public query func getOwner() : async Principal{
@@ -20,6 +23,18 @@ actor class NFT (name: Text, owner: Principal, content: [Nat8]) = this {
 
     public query func getCanisterId() : async Principal {
         return Principal.fromActor(this);
+    };
+
+    public query func getValue() : async Text{
+        return value;
+    };
+
+    public query func getType() : async Text{
+        return assetType;
+    };
+
+    public query func getLLC() : async Text{
+        return nameOfLLC;
     };
 
     public shared(msg) func transferOwnership(newOwner: Principal) : async Text {

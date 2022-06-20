@@ -1,36 +1,41 @@
-import React, { useState } from "react";
-import { token } from "../../../../declarations/token";
-import { CURRENT_USER_ID } from "../Header";
+import React, { useState } from 'react'
+import { token } from '../../../../declarations/token'
+import { CURRENT_USER_ID } from '../Header'
 
 function Faucet(props) {
-  const [isDisabled, setDisable] = useState(false);
-  const [buttonText, setText] = useState("Gimme gimme");
+  const [isDisabled, setDisable] = useState(false)
+  const [buttonText, setText] = useState('Gimme gimme')
 
   async function handleClick(event) {
-    setDisable(true);
-    const result = await token.payOut();
-    console.log("payout: " + result);
-    setText(result);
+    setDisable(true)
+    const result = await token.payOut()
+    console.log('payout: ' + result)
+    setText(result)
   }
 
   return (
-    <div className="blue window">
-      <h2>
-        <span role="img" aria-label="tap emoji">
+    <div className='mb-4 border-b border-gray-100 pb-10'>
+      <h2 className='text-center text-2xl'>
+        <span role='img' aria-label='tap emoji'>
           🚰
         </span>
         Faucet
       </h2>
-      <label>
+      <label className='mt-3 text-lg'>
         Get your free Landlord tokens here! Claim 10,000 LND tokens to {CURRENT_USER_ID}
       </label>
-      <p className="trade-buttons">
-        <button id="btn-payout" onClick={handleClick} disabled={isDisabled}>
+      <div className='mt-2'>
+        <button
+          className='flex space-x-3 items-center bg-[#274FB6] text-white px-4 py-2 rounded'
+          id='btn-payout'
+          onClick={handleClick}
+          disabled={isDisabled}
+        >
           {buttonText}
         </button>
-      </p>
+      </div>
     </div>
-  );
+  )
 }
 
-export default Faucet;
+export default Faucet

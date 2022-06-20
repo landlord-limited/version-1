@@ -1,22 +1,23 @@
-import React from "react";
+import React from 'react'
 import { Routes, Route } from 'react-router-dom'
-import Dashboard from "./Dashboard";
-import CreateProperty from "./CreateProperty";
-import Property from "./Property";
-import OwnedProperty from "./OwnedProperty"
-import Index from "./Index";
-import '../../assets/input.css';
+import Dashboard from './Dashboard'
+import CreateProperty from './CreateProperty'
+import Property from './Property'
+import OwnedProperty from './OwnedProperty'
+import Index from './Index'
+import '../../assets/input.css'
 // import "bootstrap/dist/css/bootstrap.min.css";
-import App from "./faucet/App";
+import FaucetApp from './faucet/App'
+import Header from './faucet/Header'
 
 function App() {
-
   // const NFTID = "rrkah-fqaaa-aaaaa-aaaaq-cai";
-  
+
   return (
     <>
       <Routes>
         <Route path='/' element={<Index />} />
+        <Route path='/faucet' element={<FaucetApp />} />
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/property/:id' element={<Property />} />
         <Route path='/create-property' element={<CreateProperty />} />
@@ -26,4 +27,4 @@ function App() {
   )
 }
 
-export default App;
+export default App

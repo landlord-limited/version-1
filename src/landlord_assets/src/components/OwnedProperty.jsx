@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
 import Layout from './Layout'
-import HouseCard from './dashboard/HouseCard'
+import { HouseCard } from './dashboard/HouseCard'
 import { landlord } from "../../../declarations/landlord";
 import { Principal } from "@dfinity/principal";
 
-const Dashboard = () => {
+const OwnedProperty = (props) => {
 
   const [userOwnedGallery, setUserOwnedGallery] = useState();
 
   const CURRENT_USER_ID = Principal.fromText("2vxsx-fae");
 
   async function getNFTs() {
-    const userNFTIds = await landlord.getOwnedNFTs(CURRENT_USER_ID)
+    const userNFTIds = await landlord.getOwnedNFTs(props.userId)
     console.log(userNFTIds)
     setUserOwnedGallery(userNFTIds.map((NFTId) => (
-                <HouseCard key={NFTId} id={NFTId} role='collection' layout='grid' />
+                <HouseCard key={NFTId.toText()} id={NFTId} role='collection' layout='grid' />
               )))
   }
 
@@ -85,18 +85,18 @@ const Dashboard = () => {
               {userOwnedGallery}
             </div>
           </div>
-          <div className='mt-10'>
+          {/* <div className='mt-10'>
             <h1 className='text-2xl font-semibold'>All Listings</h1>
             <div className='grid grid-cols-1 md:grid-cols-4 gap-4 mt-5'>
               {properties.map(({ img, id }) => (
                 <HouseCard key={id} img={img} id={id} role='collection' layout='grid' />
               ))}
             </div>
-          </div>
+          </div> */}
         </div>
       </Layout>
     </div>
   )
 }
 
-export default Dashboard
+export default OwnedProperty

@@ -1,4 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { Actor, HttpAgent } from "@dfinity/agent";
+import { landlord } from "../../../declarations/landlord";
+import { idlFactory } from "../../../declarations/nft";
+import { idlFactory as tokenIdlFactory } from "../../../declarations/token";
+import { NFTDetails } from "./dashboard/HouseCard";
 import cm1 from '../../assets/images/communities/cm1.svg'
 import Layout from './Layout'
 import { AiOutlineClockCircle } from 'react-icons/ai'
@@ -9,8 +14,9 @@ import { BsEye } from 'react-icons/bs'
 import coin from '../../assets/images/coin.svg'
 import { FiKey } from 'react-icons/fi'
 import { Principal } from "@dfinity/principal";
+import Button from "./Button";
 
-const Property = () => {
+const Property = (props) => {
 
   const [description, setDescription] = useState("");
   const [owner, setOwner] = useState();
@@ -18,7 +24,7 @@ const Property = () => {
   const [valuation, setValuation] = useState("");
   const [propertyType, setType] = useState("");
   const [llc, setLLC] = useState("");
-  // const [button, setButton] = useState();
+  const [button, setButton] = useState();
   const [priceInput, setPriceInput] = useState();
   const [loaderHidden, setLoaderHidden] = useState(true);
   const [blur, setBlur] = useState();
@@ -37,6 +43,9 @@ const Property = () => {
   let NFTActor;
 
   async function loadNFT() {
+
+    const id = NFTDetails.canId;
+    const role = NFTDetails.role;
     NFTActor = await Actor.createActor(idlFactory, {
       agent,
       canisterId: id,
@@ -58,22 +67,23 @@ const Property = () => {
     setType(type);
     setLLC(LLC);
 
-    if (props.role == "collection") {
+    if (role == "collection") {
 
-        const nftIsListed = await landlord.isListed(props.id);
+        const nftIsListed = await landlord.isListed(id);
+        console.log("collection");
     
         if (nftIsListed) {
           setOwner("Landlord");
           setBlur({filter: "blur(4px)"});
           setSellStatus("Listed");
         } else {
-          setButton(<Button handleClick={handleSell} text={"Sell"} />);
+          setButton(<Button id={id} handleClick={sellProperty} text={"Sell Property"} />);
         }
     
     } else if (role == "discover") {
       const originalOwner = await landlord.getOriginalOwner(id);
-      if (originalOwner.toText() != CURRENT_USER_ID.toText()) {
-        setButton(<Button handleClick={handleBuy} text={"Buy"} />);
+      if (originalOwner.toText() != props.userId.toText()) {
+        setButton(<Button handleClick={handleBuy} text={"Buy Property"} />);
       }
 
       const price = await landlord.getListedNFTPrice(id);
@@ -84,36 +94,25 @@ const Property = () => {
 
   useEffect(() => {
     loadNFT();
+    console.log(NFTDetails)
   }, [])
 
   let price;
 
-  function handleSell() {
-    console.log("Sell clicked");
-    setPriceInput(<input
-        placeholder="Price in LND"
-        type="number"
-        className="price-input"
-        value={price}
-        onChange={(e) => price=e.target.value}
-      />);
+  async function sellProperty(id) {
     
-    // setButton(<Button handleClick={sellItem} text={"Confirm"} />);
-  }
-
-  async function sellItem() {
-    setBlur({filter: "blur(4px)"});
     setLoaderHidden(false);
-    console.log("set price = " + price);
+    console.log("set price = " + valuation);
     // const newId = Principal.fromText(props.id);
     // console.log("Principal: " + newId);
-    const listingResult = await landlord.listItem(id, Number(price));
+    const listingResult = await landlord.listItem(id, Number(valuation));
     console.log("listing: " + listingResult);
     if (listingResult == "Success") {
-      const lord = await landlord.getLandlordCanisterId();
-      const transferResult = await NFTActor.transferOwnership(lord);
+      const landlordId = await landlord.getLandlordCanisterId();
+      const transferResult = await NFTActor.transferOwnership(landlordId);
       console.log(transferResult);
       if (transferResult == "Success") {
+        setBlur({filter: "blur(4px)"});
         setLoaderHidden(true);
         setButton();
         setPriceInput();
@@ -137,7 +136,7 @@ const Property = () => {
     const result = await tokenActor.transfer(sellerId, itemPrice);
     if (result == "Success") {
       //Transfer Ownership
-      const transferResult = await landlord.completePurchase(id, sellerId, CURRENT_USER_ID);
+      const transferResult = await landlord.completePurchase(id, sellerId, props.userId);
       console.log("purchase: " + transferResult);
       setLoaderHidden(true);
       setDisplay(false);
@@ -189,7 +188,7 @@ const Property = () => {
             <div className='flex justify-end mb-5 border-b border-gray-200 pb-3'>
               <button className='flex space-x-3 items-center bg-teal-700 text-white px-4 py-2 rounded'>
                 <BiPlus />
-                <span>Buy Property</span>
+              {button}
               </button>
             </div>
           </div>
@@ -206,11 +205,11 @@ const Property = () => {
                 </div>
                 <div className='flex items-center space-x-2'>
                   <img src={coin} alt='coin' className='w-8 h-8' />
-                  <span className='font-semibold text-lg'>{valuation} LND</span>
+                  <span className='font-semibold text-lg'>{priceLabel ? priceLabel : valuation} LND</span>
                 </div>
               </div>
-              <img src={image} alt='Property' className='rounded-lg' />
-              <div className='flex space-x-4 overflow-x-scroll scrollbar-hide touch-pan-x snap-mandatory snap-x snap-center scroll-smooth mt-5'>
+              <img src={image} style={blur} alt='Property' className='rounded-lg' />
+              {/* <div className='flex space-x-4 overflow-x-scroll scrollbar-hide touch-pan-x snap-mandatory snap-x snap-center scroll-smooth mt-5'>
                 {properties.map(({ img }) => (
                   <div className='rounded-lg w-36 h-28 flex-grow-0 flex-shrink-0'>
                     <img
@@ -220,7 +219,7 @@ const Property = () => {
                     />
                   </div>
                 ))}
-              </div>
+              </div> */}
               <div className='mt-4 '>
                 <div className='border-b border-gray-200 pb-5 mb-5 flex items-center justify-between'>
                   <div>

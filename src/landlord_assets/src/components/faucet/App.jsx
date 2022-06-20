@@ -8,9 +8,9 @@ function FaucetApp(props) {
   return (
     <div id='screen' className='mx-auto max-w-screen-sm px-4'>
       <Header />
-      <Faucet />
-      <Balance />
-      <Transfer />
+      <Faucet id={props.userId}/>
+      <Balance id={props.userId}/>
+      <Transfer id={props.userId}/>
     </div>
   )
 }

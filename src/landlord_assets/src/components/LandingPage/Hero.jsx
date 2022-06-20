@@ -19,7 +19,7 @@ const Hero = () => {
               and security blockchain technology provides you in a thriving digital marketplace.
             </p>
             <div className='flex space-x-5 mt-5'>
-              <Link to='/dashboard' className='btn-primary'>
+              <Link to='/faucet' className='btn-primary'>
                 Get Started
               </Link>
               <button className='flex space-x-2 border border-[#274FB6] rounded-md px-4 py-2 text-[#274FB6] hover:text-white hover:bg-[#274FB6] bg-white uppercase items-center transition duration-150 ease-in-out'>

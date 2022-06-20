@@ -14,6 +14,8 @@ import coin from '../../../assets/images/coin.svg'
 import { Popover } from '@headlessui/react'
 import { Link } from 'react-router-dom'
 
+let NFTDetails;
+
 const HouseCard = ({ layout, id, role }) => {
 
   const [description, setDescription] = useState("");
@@ -22,6 +24,7 @@ const HouseCard = ({ layout, id, role }) => {
   const [valuation, setValuation] = useState("");
   const [propertyType, setType] = useState("");
   const [llc, setLLC] = useState("");
+  const [canId, setCanId] = useState("");
   // const [button, setButton] = useState();
   const [priceInput, setPriceInput] = useState();
   const [loaderHidden, setLoaderHidden] = useState(true);
@@ -51,6 +54,8 @@ const HouseCard = ({ layout, id, role }) => {
     const value = await NFTActor.getValue();
     const type = await NFTActor.getType();
     const LLC = await NFTActor.getLLC();
+    // const canisterId = await NFTActor.getCanisterId();
+    // const NFTCanId = canisterId.toText()
     const imageData = await NFTActor.getAsset();
     const imageContent = new Uint8Array(imageData);
     const image = URL.createObjectURL(new Blob([imageContent.buffer], {type: "image/png"}));
@@ -61,10 +66,11 @@ const HouseCard = ({ layout, id, role }) => {
     setValuation(value);
     setType(type);
     setLLC(LLC);
+    // setCanId(NFTCanId);
 
     if (role == "collection") {
 
-        const nftIsListed = await landlord.isListed(props.id);
+        const nftIsListed = await landlord.isListed(id);
     
         if (nftIsListed) {
           setOwner("Landlord");
@@ -77,7 +83,7 @@ const HouseCard = ({ layout, id, role }) => {
     } else if (role == "discover") {
       const originalOwner = await landlord.getOriginalOwner(id);
       if (originalOwner.toText() != CURRENT_USER_ID.toText()) {
-        setButton(<Button handleClick={handleBuy} text={"Buy"} />);
+        setButton(<Button handleClick={handleBuy} text={"Buy Property"} />);
       }
 
       const price = await landlord.getListedNFTPrice(id);
@@ -88,7 +94,20 @@ const HouseCard = ({ layout, id, role }) => {
 
   useEffect(() => {
     loadNFT();
+    NFTDetails = {
+      canId: id,
+      role
+    };
   }, [])
+
+  function details() {
+    NFTDetails = {
+      canId: id,
+      role
+    };
+    console.log(NFTDetails)
+    return 
+  }
 
   let price;
 
@@ -208,7 +227,7 @@ const HouseCard = ({ layout, id, role }) => {
             className='border border-gray-100 px-4 py-2 rounded text-white text-sm flex items-center space-x-2'
           >
             <BsEye />
-            <span>View</span>
+            <span onClick={details}>View</span>
           </Link>
         </div>
       </div>
@@ -243,4 +262,4 @@ const HouseCard = ({ layout, id, role }) => {
   )
 }
 
-export default HouseCard
+export { HouseCard, NFTDetails }

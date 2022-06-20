@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { token } from '../../../../declarations/token'
-import { CURRENT_USER_ID } from '../Header'
 
 function Faucet(props) {
   const [isDisabled, setDisable] = useState(false)
@@ -22,7 +21,7 @@ function Faucet(props) {
         Faucet
       </h2>
       <label className='mt-3 text-lg'>
-        Get your free Landlord tokens here! Claim 10,000 LND tokens to {CURRENT_USER_ID}
+        Get your free Landlord tokens here! Claim 10,000 LND tokens to {props.id}
       </label>
       <div className='mt-2'>
         <button

@@ -2,6 +2,7 @@ import React from "react";
 import { BiMenu, BiPlus, BiSearch, BiUser } from 'react-icons/bi'
 import { usePropertyContext } from '../context/context'
 import coin from '../../../assets/images/coin.svg'
+import { Link } from 'react-router-dom'
 
 const Header = () => {
   const { toggleSidebar } = usePropertyContext()
@@ -24,12 +25,13 @@ const Header = () => {
           </div>
           <button className='flex items-center px-4 py-2 bg-[#274FB6] text-white rounded space-x-2'>
             <BiPlus className='text-lg' />
-            <span>Post listing</span>
+            <Link to='/create-property'>
+              <span>Post listing</span>
+            </Link>
           </button>
           <div className='w-10 h-10 rounded-full flex justify-center items-center bg-gray-100 border-2 border-blue-200'>
             <BiUser className='text-[#274FB6]' />
           </div>
-          <img src={coin} alt='coin' />
         </div>
       </div>
     </div>

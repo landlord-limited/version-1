@@ -31,7 +31,9 @@ const Sidebar = () => {
                   >
                     <div className='flex space-x-2 items-center'>
                       <BsFillMenuButtonWideFill className='text-lg' />
-                      <span>Dashboard</span>
+                      <Link to='/faucet'>
+                      <span>Faucet</span>
+                      </Link>
                     </div>
                     <MdKeyboardArrowUp className={`${open ? 'rotate-180 transform' : ''}`} />
                   </Disclosure.Button>
@@ -46,7 +48,7 @@ const Sidebar = () => {
                     <Disclosure.Panel>
                       <ul className='ml-5 px-4 py-2 rounded '>
                         <li className='py-2'>
-                          <Link to='#' className='text-[#274FB6] hover:text-[#304a8a]'>
+                          <Link to='/owned-property' className='text-[#274FB6] hover:text-[#304a8a]'>
                             Edit Profile
                           </Link>
                         </li>
@@ -79,7 +81,9 @@ const Sidebar = () => {
                   >
                     <div className='flex space-x-2 items-center'>
                       <RiFileList2Line className='text-lg' />
-                      <span>All Listings</span>
+                      <Link to='/dashboard'>
+                      <span>Dashboard</span>
+                      </Link>
                     </div>
                     <MdKeyboardArrowUp className={`${open ? 'rotate-180 transform' : ''}`} />
                   </Disclosure.Button>
@@ -117,7 +121,9 @@ const Sidebar = () => {
                   >
                     <div className='flex space-x-2 items-center'>
                       <AiFillAppstore className='text-lg' />
-                      <span>Trading Grounds</span>
+                      <Link to='/owned-property'>
+                      <span>Owned Properties</span>
+                      </Link>
                     </div>
                     <MdKeyboardArrowUp className={`${open ? 'rotate-180 transform' : ''}`} />
                   </Disclosure.Button>

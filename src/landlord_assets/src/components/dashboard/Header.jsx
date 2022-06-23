@@ -1,7 +1,6 @@
 import React from "react";
 import { BiMenu, BiPlus, BiSearch, BiUser } from 'react-icons/bi'
 import { usePropertyContext } from '../context/context'
-import coin from '../../../assets/images/coin.svg'
 import { Link } from 'react-router-dom'
 
 const Header = () => {
@@ -29,9 +28,11 @@ const Header = () => {
               <span>Post listing</span>
             </Link>
           </button>
+          <Link to='/owned-property'>
           <div className='w-10 h-10 rounded-full flex justify-center items-center bg-gray-100 border-2 border-blue-200'>
             <BiUser className='text-[#274FB6]' />
           </div>
+          </Link>
         </div>
       </div>
     </div>

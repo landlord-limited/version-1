@@ -7,13 +7,13 @@ import Property from './Property'
 import OwnedProperty from './OwnedProperty'
 import Index from './Index'
 import FaucetApp from './faucet/App'
-
-const CURRENT_USER_ID = "";
+import "../../assets/input.css"
 
 function App() {
 
   const [signedIn, setSignedIn] = useState(false);
   const [client, setClient] = useState();
+  const [principal, setPrincipal] = useState();
 
   const initAuth = async () => {
     const client = await AuthClient.create()
@@ -26,7 +26,6 @@ function App() {
       const principal = identity.getPrincipal().toString()
       setSignedIn(true)
       setPrincipal(principal)
-      CURRENT_USER_ID = principal;
     }
   }
 
@@ -44,7 +43,6 @@ function App() {
     })
     setSignedIn(true)
     setPrincipal(principal)
-    CURRENT_USER_ID = principal;
   }
 
   useEffect(() => {
@@ -54,12 +52,12 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path='/' element={<Index />} />
-        <Route path='/faucet' element={!signedIn && client ? signIn() : <FaucetApp userId={CURRENT_USER_ID} />} />
-        <Route path='/dashboard' element={!signedIn && client ? signIn() : <Dashboard userId={CURRENT_USER_ID} />} />
-        <Route path='/property/:id' element={!signedIn && client ? signIn() : <Property userId={CURRENT_USER_ID} />} />
-        <Route path='/create-property' element={!signedIn && client ? signIn() : <CreateProperty userId={CURRENT_USER_ID} />} />
-        <Route path='/owned-property' element={!signedIn && client ? signIn() : <OwnedProperty userId={CURRENT_USER_ID} />} />
+        <Route path='/' element={<Index signedIn={signedIn} signIn={signIn} client={client} />} />
+        <Route path='/faucet' element={<FaucetApp id={principal} signedIn={signedIn} signIn={signIn} client={client} />} />
+        <Route path='/dashboard' element={<Dashboard id={principal} signedIn={signedIn} signIn={signIn} /> } />
+        <Route path='/property/:id' element={<Property id={principal} signedIn={signedIn} signIn={signIn}/>} />
+        <Route path='/create-property' element={<CreateProperty />} />
+        <Route path='/owned-property' element={<OwnedProperty id={principal} signedIn={signedIn} signIn={signIn} />} />
       </Routes>
     </>
   )

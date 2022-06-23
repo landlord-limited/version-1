@@ -7,13 +7,13 @@ import Roadmap from './LandingPage/Roadmap'
 import Statistics from './LandingPage/Statistics'
 import Testimonials from './LandingPage/Testimonials'
 
-const Index = () => {
+const Index = (props) => {
   return (
     <div className=''>
       <div className='flex mx-auto max-w-screen-2xl px-4 2xl:px-0 justify-center md:justify-start py-4'>
         <img src={logo} alt='Landlord' loading='lazy' className='w-auto h-16' />
       </div>
-      <HeroComponent />
+      <HeroComponent signedIn={props.signedIn} signIn={props.signIn} client={props.client} />
       <Roadmap />
       <About />
       <Statistics />

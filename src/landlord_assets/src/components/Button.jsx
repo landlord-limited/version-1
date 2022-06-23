@@ -2,7 +2,7 @@ import React from 'react'
 
 const Button = (props) => {
   return (
-      <span onClick={props.handleClick(props.id)}>
+      <span onClick={props.handleClick}>
         {props.text}
       </span>
   )

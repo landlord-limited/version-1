@@ -63,7 +63,7 @@ const Sidebar = () => {
                           </Link>
                         </li>
                         <li className='py-2'>
-                          <Link to='#' className='text-[#274FB6] hover:text-[#304a8a]'>
+                          <Link to='/faucet' className='text-[#274FB6] hover:text-[#304a8a]'>
                             Token Converter
                           </Link>
                         </li>
@@ -98,7 +98,7 @@ const Sidebar = () => {
                     <Disclosure.Panel>
                       <ul className='ml-5 px-4 py-2 rounded '>
                         <li className='py-2'>
-                          <Link to='#' className='text-[#274FB6] hover:text-[#304a8a]'>
+                          <Link to='/dashboard' className='text-[#274FB6] hover:text-[#304a8a]'>
                             All Listings
                           </Link>
                         </li>

@@ -1,10 +1,18 @@
 import React from "react";
+import { useNavigate } from "react-router-dom"
 import { BsPlayCircleFill } from 'react-icons/bs'
 import bg from '../../../assets/images/bg.png'
 import bgSm from '../../../assets/images/bg-sm.png'
 import { Link } from 'react-router-dom'
 
-const Hero = () => {
+const Hero = (props) => {
+
+  function goTo() {
+    let navigate = useNavigate();
+
+    navigate("/faucet", { replace: true });
+  }
+
   return (
     <div className='relative pb-10'>
       <div className='pt-10'>
@@ -19,8 +27,8 @@ const Hero = () => {
               and security blockchain technology provides you in a thriving digital marketplace.
             </p>
             <div className='flex space-x-5 mt-5'>
-              <Link to='/faucet' className='btn-primary'>
-                Get Started
+              <Link to={props.signedIn && "/faucet"} className='btn-primary'>
+                <span onClick={!props.signedIn && props.client ? props.signIn : goTo}>Get Started</span>
               </Link>
               <button className='flex space-x-2 border border-[#274FB6] rounded-md px-4 py-2 text-[#274FB6] hover:text-white hover:bg-[#274FB6] bg-white uppercase items-center transition duration-150 ease-in-out'>
                 <BsPlayCircleFill className='' />

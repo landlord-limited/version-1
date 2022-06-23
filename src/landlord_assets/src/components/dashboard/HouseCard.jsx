@@ -215,6 +215,7 @@ const HouseCard = ({ layout, id, role }) => {
           src={image}
           loading='lazy'
           alt='House'
+          style={blur}
           className='object-cover h-full w-full rounded-lg'
         />
         <div className='absolute bottom-0 flex items-center bg-white space-x-2 py-1 px-2 right-0 border border-gray-200 rounded-l-md'>

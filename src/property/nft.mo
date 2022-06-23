@@ -14,7 +14,7 @@ actor class NFT (description: Text, owner: Principal, content: [Nat8], valuation
     };
 
     public query func getOwner() : async Principal{
-        return owner;
+        return nftOwner;
     };
 
     public query func getAsset() : async [Nat8]{

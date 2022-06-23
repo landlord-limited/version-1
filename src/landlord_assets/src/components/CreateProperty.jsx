@@ -4,17 +4,12 @@ import Layout from './Layout'
 import { Listbox, Transition } from '@headlessui/react'
 import { RiArrowDropDownLine } from 'react-icons/ri'
 import { BiImageAdd } from 'react-icons/bi'
-import { Link } from 'react-router-dom'
-import Button from "./Button";
-import OwnedProperty from './OwnedProperty'
 
+const CreateProperty = () => {
 
-
-const CreateProperty = (props) => {
   const [countries, setCountries] = useState([])
   const [selected, setSelected] = useState()
   const [dImage, setImage] = useState(null)
-  const [nftPrincipal, setNFTPrincipal] = useState("");
   const [image, sendImage] = useState({});
   const [description, setDescription] = useState("");
   const [valuation, setValuation] = useState("");
@@ -42,7 +37,7 @@ const CreateProperty = (props) => {
     setLoaderHidden(null)
     setText("Done!")
 
-    return <OwnedProperty />
+    return
   }
 
   const URL = 'https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/index.json'
@@ -68,7 +63,6 @@ const CreateProperty = (props) => {
     setText("Create Token")
   }, [])
 
-  console.log(dImage)
 
   return (
     <Layout>

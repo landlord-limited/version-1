@@ -22,17 +22,13 @@ const Property = (props) => {
   const [owner, setOwner] = useState();
   const [image, setImage] = useState();
   const [valuation, setValuation] = useState("");
-  const [propertyType, setType] = useState("");
-  const [llc, setLLC] = useState("");
+  // const [propertyType, setType] = useState("");
+  // const [llc, setLLC] = useState("");
   const [button, setButton] = useState();
-  const [priceInput, setPriceInput] = useState();
-  const [loaderHidden, setLoaderHidden] = useState(true);
   const [blur, setBlur] = useState();
-  const [sellStatus, setSellStatus] = useState("");
-  const [priceLabel, setPriceLable] = useState();
-  const [shouldDisplay, setDisplay] = useState(true);
+  const [loader, setLoader] = useState()
 
-  const CURRENT_USER_ID = Principal.fromText("2vxsx-fae");
+  const CURRENT_USER_ID = props.id;
 
 
   const localHost = "http://localhost:8080/";
@@ -41,11 +37,13 @@ const Property = (props) => {
   agent.fetchRootKey();
   ////////////////
   let NFTActor;
+  let id;
+  let role;
 
   async function loadNFT() {
 
-    const id = NFTDetails.canId;
-    const role = NFTDetails.role;
+    id = NFTDetails.canId;
+    role = NFTDetails.role;
     NFTActor = await Actor.createActor(idlFactory, {
       agent,
       canisterId: id,
@@ -64,8 +62,8 @@ const Property = (props) => {
     setOwner(owner.toText());
     setImage(image);
     setValuation(value);
-    setType(type);
-    setLLC(LLC);
+    // setType(type);
+    // setLLC(LLC);
 
     if (role == "collection") {
 
@@ -75,19 +73,15 @@ const Property = (props) => {
         if (nftIsListed) {
           setOwner("Landlord");
           setBlur({filter: "blur(4px)"});
-          setSellStatus("Listed");
         } else {
-          setButton(<Button id={id} handleClick={sellProperty} text={"Sell Property"} />);
+          setButton(<Button handleClick={sellProperty} text={"Sell Property"} />);
         }
     
     } else if (role == "discover") {
       const originalOwner = await landlord.getOriginalOwner(id);
-      if (originalOwner.toText() != props.userId.toText()) {
+      if (originalOwner.toText() != CURRENT_USER_ID.toText()) {
         setButton(<Button handleClick={handleBuy} text={"Buy Property"} />);
       }
-
-      const price = await landlord.getListedNFTPrice(id);
-      setPriceLable(<PriceLabel sellPrice={price.toString()} />)
     }
   } 
 
@@ -99,12 +93,14 @@ const Property = (props) => {
 
   let price;
 
-  async function sellProperty(id) {
-    
-    setLoaderHidden(false);
+  async function sellProperty() {
+
+    setLoader(<svg role="status" class="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
+    <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
+    </svg>)
+    setButton("Loading..");
     console.log("set price = " + valuation);
-    // const newId = Principal.fromText(props.id);
-    // console.log("Principal: " + newId);
     const listingResult = await landlord.listItem(id, Number(valuation));
     console.log("listing: " + listingResult);
     if (listingResult == "Success") {
@@ -112,19 +108,22 @@ const Property = (props) => {
       const transferResult = await NFTActor.transferOwnership(landlordId);
       console.log(transferResult);
       if (transferResult == "Success") {
+        setLoader();
         setBlur({filter: "blur(4px)"});
-        setLoaderHidden(true);
-        setButton();
+        setButton("Property Listed!");
         setPriceInput();
         setOwner("Landlord");
-        setSellStatus("Listed");
       }
     }
   }
 
   async function handleBuy() {
+    setLoader(<svg role="status" class="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
+    <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
+    </svg>)
+    setButton("Loading..");
     console.log("Buy was triggered");
-    setLoaderHidden(false);
     const tokenActor = await Actor.createActor(tokenIdlFactory, {
       agent,
       canisterId: Principal.fromText("rkp4c-7iaaa-aaaaa-aaaca-cai"),
@@ -136,49 +135,13 @@ const Property = (props) => {
     const result = await tokenActor.transfer(sellerId, itemPrice);
     if (result == "Success") {
       //Transfer Ownership
-      const transferResult = await landlord.completePurchase(id, sellerId, props.userId);
+      const transferResult = await landlord.completePurchase(id, sellerId, CURRENT_USER_ID);
       console.log("purchase: " + transferResult);
-      setLoaderHidden(true);
-      setDisplay(false);
+      setLoader()
+      setButton("Property Bought!");
     }
   }
   
-  const img =
-    'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=80&raw_url=true&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670'
-  const properties = [
-    {
-      id: 1,
-      img: 'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=80&raw_url=true&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670',
-    },
-    {
-      id: 2,
-      img: 'https://images.unsplash.com/photo-1572120360610-d971b9d7767c?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=80&raw_url=true&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3570',
-    },
-    {
-      id: 3,
-      img: 'https://images.unsplash.com/photo-1575517111478-7f6afd0973db?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=80&raw_url=true&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670',
-    },
-    {
-      id: 4,
-      img: 'https://images.unsplash.com/photo-1513584684374-8bab748fbf90?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=80&raw_url=true&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2665',
-    },
-    {
-      id: 5,
-      img: 'https://images.unsplash.com/photo-1494526585095-c41746248156?ixlib=rb-1.2.1&raw_url=true&q=80&fm=jpg&crop=entropy&cs=tinysrgb&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670',
-    },
-    {
-      id: 6,
-      img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=80&raw_url=true&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2675',
-    },
-    {
-      id: 7,
-      img: 'https://images.unsplash.com/photo-1628012209120-d9db7abf7eab?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=80&raw_url=true&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1336',
-    },
-    {
-      id: 8,
-      img: 'https://images.unsplash.com/photo-1531971589569-0d9370cbe1e5?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=80&raw_url=true&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2681',
-    },
-  ]
 
   return (
     <div>
@@ -187,7 +150,7 @@ const Property = (props) => {
           <div className='sticky top-[79px] bg-white pt-2'>
             <div className='flex justify-end mb-5 border-b border-gray-200 pb-3'>
               <button className='flex space-x-3 items-center bg-teal-700 text-white px-4 py-2 rounded'>
-                <BiPlus />
+                {loader ? loader : <BiPlus />}
               {button}
               </button>
             </div>
@@ -205,7 +168,7 @@ const Property = (props) => {
                 </div>
                 <div className='flex items-center space-x-2'>
                   <img src={coin} alt='coin' className='w-8 h-8' />
-                  <span className='font-semibold text-lg'>{priceLabel ? priceLabel : valuation} LND</span>
+                  <span className='font-semibold text-lg'>{valuation} LND</span>
                 </div>
               </div>
               <img src={image} style={blur} alt='Property' className='rounded-lg' />
